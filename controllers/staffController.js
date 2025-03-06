@@ -5,7 +5,7 @@ const getStaff = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Get API key from env
+            APIKey:  req.headers['apikey'],
             StaffID: req.query.StaffID ? parseInt(req.query.StaffID) : null,
             UserID: req.query.UserID ? parseInt(req.query.UserID) : null,
             FirstName: req.query.FirstName || null,
@@ -28,8 +28,13 @@ const getStaff = async (req, res) => {
 
         res.status(200).json(staff);
     } catch (err) {
-        console.error("🔥 Error in getStaff controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 
@@ -38,7 +43,7 @@ const getStaffPositions = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Get API key from env
+            APIKey: req.headers['apikey'], 
             PositionID: req.query.PositionID ? parseInt(req.query.PositionID) : null,
             PositionName: req.query.PositionName || null,
         };
@@ -52,8 +57,13 @@ const getStaffPositions = async (req, res) => {
 
         res.status(200).json(positions);
     } catch (err) {
-        console.error("🔥 Error in getStaffPositions controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 

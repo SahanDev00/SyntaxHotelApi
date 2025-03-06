@@ -1,11 +1,10 @@
 const administrationService = require('../services/administrationService'); // Ensure correct path
 
-// Controller to get invoices
 const getInvoices = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Secure API key from env
+            APIKey: req.headers['apikey'], 
             InvoiceID: req.query.InvoiceID ? parseInt(req.query.InvoiceID) : null,
             BookingID: req.query.BookingID ? parseInt(req.query.BookingID) : null,
             MinAmount: req.query.MinAmount ? parseFloat(req.query.MinAmount) : null,
@@ -22,16 +21,23 @@ const getInvoices = async (req, res) => {
 
         res.status(200).json(invoices);
     } catch (err) {
-        console.error("🔥 Error in getInvoices controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
+
+
 
 const getUsers = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Secure API key from env
+            APIKey: req.headers['apikey'],
             UserID: req.query.UserID ? parseInt(req.query.UserID) : null,
             Username: req.query.Username || null,
             Role: req.query.Role || null,
@@ -47,8 +53,13 @@ const getUsers = async (req, res) => {
 
         res.status(200).json(users);
     } catch (err) {
-        console.error("🔥 Error in getUsers controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 
@@ -56,21 +67,26 @@ const getRoles = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Secure API key from env
+            APIKey: req.headers['apikey'],
             RoleName: req.query.RoleName || null,
         };
 
         // Call the service function
         const usersRoles = await administrationService.getRoles(data);
 
-        if (users.length === 0) {
+        if (usersRoles.length === 0) {
             return res.status(404).json({ message: "No user roles found" });
         }
 
         res.status(200).json(usersRoles);
     } catch (err) {
-        console.error("🔥 Error in getRoles controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 

@@ -17,8 +17,7 @@ const getBookings = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in bookingService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 

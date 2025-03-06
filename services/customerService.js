@@ -15,8 +15,7 @@ const getCustomers = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 
@@ -33,8 +32,7 @@ const getCustomerCategory = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 module.exports = { getCustomers, getCustomerCategory }

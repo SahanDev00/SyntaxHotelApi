@@ -12,8 +12,7 @@ const getService = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in servicesService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 
@@ -30,8 +29,7 @@ const getServiceOrders = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in servicesService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 

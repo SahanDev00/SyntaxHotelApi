@@ -1,11 +1,11 @@
-const serviceService = require('../services/serviceService'); // Ensure correct path
+const serviceService = require('../services/servicesService'); // Ensure correct path
 
 // Controller to get services
 const getService = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Get API key from env
+            APIKey: req.headers['apikey'], // Get API key from env
             ServiceID: req.query.ServiceID ? parseInt(req.query.ServiceID) : null,
             ServiceName: req.query.ServiceName || null,
             price: req.query.price ? parseFloat(req.query.price) : null,
@@ -20,8 +20,13 @@ const getService = async (req, res) => {
 
         res.status(200).json(services);
     } catch (err) {
-        console.error("🔥 Error in getService controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 
@@ -30,7 +35,7 @@ const getServiceOrders = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Get API key from env
+            APIKey: req.headers['apikey'], 
             ServiceOrderID: req.query.ServiceOrderID ? parseInt(req.query.ServiceOrderID) : null,
             BookingID: req.query.BookingID ? parseInt(req.query.BookingID) : null,
             ServiceID: req.query.ServiceID ? parseInt(req.query.ServiceID) : null,
@@ -46,8 +51,13 @@ const getServiceOrders = async (req, res) => {
 
         res.status(200).json(serviceOrders);
     } catch (err) {
-        console.error("🔥 Error in getServiceOrders controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 

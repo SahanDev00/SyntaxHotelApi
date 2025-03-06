@@ -14,8 +14,7 @@ const getInvoices = async (data) => {
 
         return result.recordset;
     } catch (err) {
-        console.error("🔥 Error in administrationService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
@@ -32,8 +31,7 @@ const getUsers = async (data) => {
 
         return result.recordset;
     } catch (err) {
-        console.error("🔥 Error in administrationService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
@@ -47,8 +45,7 @@ const getRoles = async (data) => {
 
         return result.recordset;
     } catch (err) {
-        console.error("Error in administrationService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 

@@ -20,8 +20,7 @@ const getStaff = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in staffService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 
@@ -36,8 +35,7 @@ const getStaffPositions = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in staffService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 }
 

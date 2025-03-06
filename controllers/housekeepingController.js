@@ -5,7 +5,7 @@ const getHousekeeping = async (req, res) => {
     try {
         // Extract query parameters
         const data = {
-            APIKey: process.env.APIKey, // Secure API key from env
+            APIKey: req.headers['apikey'], 
             HousekeepingID: req.query.HousekeepingID ? parseInt(req.query.HousekeepingID) : null,
             RoomID: req.query.RoomID ? parseInt(req.query.RoomID) : null,
             StaffID: req.query.StaffID ? parseInt(req.query.StaffID) : null,
@@ -22,8 +22,13 @@ const getHousekeeping = async (req, res) => {
 
         res.status(200).json(housekeepingRecords);
     } catch (err) {
-        console.error("🔥 Error in getHousekeeping controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 

@@ -3,7 +3,7 @@ const customerService = require('../services/customerService');
 const getCustomers = async (req, res) => {
     try {
         const data = {
-            APIKey: process.env.APIKey, 
+            APIKey: req.headers['apikey'], 
             CustomerID: req.query.CustomerID ? parseInt(req.query.CustomerID) : null,
             CustomerCategoryID: req.query.CustomerCategoryID ? parseInt(req.query.CustomerCategoryID) : null,
             FullName: req.query.FullName || null,
@@ -14,14 +14,19 @@ const getCustomers = async (req, res) => {
 
         const customers = await customerService.getCustomers(data);
 
-        if (rooms.length === 0) {
+        if (customers.length === 0) {
             return res.status(404).json({ message: "No customers found" });
         }
 
         res.status(200).json(customers);
     } catch (err) {
-        console.error("🔥 Error in getCustomer controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 
@@ -29,7 +34,7 @@ const getCustomerCategory = async (req, res) => {
     try {
         // Extract query parameters from request
         const data = {
-            APIKey: process.env.APIKey, // Fetch API key from environment variables
+            APIKey: req.headers['apikey'],
             CategoryID: req.query.CategoryID ? parseInt(req.query.CategoryID) : null,
             CategoryName: req.query.CategoryName || null,
             AdditionalFeeRate: req.query.AdditionalFeeRate || null,
@@ -47,9 +52,13 @@ const getCustomerCategory = async (req, res) => {
         // Return the categories list as JSON response
         res.status(200).json(categories);
     } catch (err) {
-        // Log error and send internal server error response
-        console.error("🔥 Error in getCustomerCategory controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 

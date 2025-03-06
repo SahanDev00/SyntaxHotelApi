@@ -4,7 +4,7 @@ const getBookings = async (req, res) => {
     try {
         // Extract query parameters from request
         const data = {
-            APIKey: process.env.APIKey, // Fetch API key from environment variables
+            APIKey: req.headers['apikey'], 
             BookingID: req.query.BookingID ? parseInt(req.query.BookingID) : null,
             CustomerID: req.query.CustomerID ? parseInt(req.query.CustomerID) : null,
             RoomID: req.query.RoomID ? parseInt(req.query.RoomID) : null,
@@ -26,9 +26,13 @@ const getBookings = async (req, res) => {
         // Return the bookings list as JSON response
         res.status(200).json(bookings);
     } catch (err) {
-        // Log error and send internal server error response
-        console.error("🔥 Error in getBookings controller:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
     }
 };
 

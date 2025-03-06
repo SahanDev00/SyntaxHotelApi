@@ -14,8 +14,7 @@ const getHousekeeping = async (data) => {
 
         return result.recordset;
     } catch (err) {
-        console.error("🔥 Error in housekeepingService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 

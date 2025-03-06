@@ -13,8 +13,7 @@ const getRooms = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
@@ -31,8 +30,7 @@ const getRoomTypes = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
@@ -49,8 +47,7 @@ const getTables = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
