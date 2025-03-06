@@ -36,4 +36,50 @@ const getBookings = async (req, res) => {
     }
 };
 
-module.exports = { getBookings };
+const GetPendingPaymentsCount = async (req, res) => {
+    try {
+        // Extract query parameters from request
+        const data = {
+            APIKey: req.headers['apikey'], 
+        };
+
+        // Call the service function to fetch bookings
+        const pendingPaymentsCount = await bookingService.GetPendingPaymentsCount(data);
+
+        // Return the bookings list as JSON response
+        res.status(200).json(pendingPaymentsCount);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+const GetUpcomingReservations = async (req, res) => {
+    try {
+        // Extract query parameters from request
+        const data = {
+            APIKey: req.headers['apikey'], 
+        };
+
+        // Call the service function to fetch bookings
+        const upcomingReservations = await bookingService.GetUpcomingReservations(data);
+
+        // Return the bookings list as JSON response
+        res.status(200).json(upcomingReservations);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+module.exports = { getBookings, GetPendingPaymentsCount, GetUpcomingReservations };

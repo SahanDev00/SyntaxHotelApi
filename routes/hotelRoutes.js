@@ -3,6 +3,8 @@ const router = express.Router();
 const hotelController = require('../controllers/hotelController');
 
 router.get('/rooms', hotelController.getRooms);
+router.get('/availablerooms', hotelController.GetAvailableRoomsCount);
+router.get('/availabletables', hotelController.GetAvailableTablesCount);
 router.get('/roomtypes', hotelController.getRoomTypes);
 router.get('/tables', hotelController.getTables);
 router.get('/tabletypes', hotelController.getTableTypes);

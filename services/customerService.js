@@ -35,4 +35,18 @@ const getCustomerCategory = async (data) => {
         return { error: err.message || 'An error occurred' };
     }
 }
-module.exports = { getCustomers, getCustomerCategory }
+
+const getCustomerCount = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .execute('[cus].CustomerCount');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+}
+
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount }

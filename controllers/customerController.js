@@ -62,4 +62,27 @@ const getCustomerCategory = async (req, res) => {
     }
 };
 
-module.exports = { getCustomers, getCustomerCategory };
+const getCustomerCount = async (req, res) => {
+    try {
+        // Extract query parameters from request
+        const data = {
+            APIKey: req.headers['apikey'],
+        };
+
+        // Call the service function to fetch customer categories
+        const count = await customerService.getCustomerCount(data);
+
+        // Return the categories list as JSON response
+        res.status(200).json(count);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount };

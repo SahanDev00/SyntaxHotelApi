@@ -1,14 +1,11 @@
 const { sql, poolPromise } = require('../config/db');
 
-const getService = async (data) => {
+const getMonthlySales = async (data) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('APIKey', sql.VarChar(255), data.APIKey)
-            .input('ServiceID', sql.Int, data.ServiceID)
-            .input('ServiceName', sql.VarChar(50), data.ServiceName)
-            .input('price', sql.Decimal(10,2), data.price)
-            .execute('[ser].extraServicesGet');
+            .execute('[charts].monthlySalesGet');
 
             return result.recordset;
     } catch (err) {
@@ -16,16 +13,12 @@ const getService = async (data) => {
     }
 }
 
-const getServiceOrders = async (data) => {
+const getCustomerGrowth = async (data) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('APIKey', sql.VarChar(255), data.APIKey)
-            .input('ServiceOrderID', sql.Int, data.ServiceOrderID)
-            .input('BookingID', sql.Int, data.BookingID)
-            .input('ServiceID', sql.Int, data.ServiceID)
-            .input('Status', sql.VarChar(20), data.Status)
-            .execute('[ser].serviceOrdersGet');
+            .execute('[charts].customerGrowthGet');
 
             return result.recordset;
     } catch (err) {
@@ -33,12 +26,12 @@ const getServiceOrders = async (data) => {
     }
 }
 
-const getServiceOrdersCount = async (data) => {
+const getUpcomingEvents = async (data) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('APIKey', sql.VarChar(255), data.APIKey)
-            .execute('[ser].OrderCount');
+            .execute('[charts].upcomingEventsGet');
 
             return result.recordset;
     } catch (err) {
@@ -46,4 +39,17 @@ const getServiceOrdersCount = async (data) => {
     }
 }
 
-module.exports = { getService, getServiceOrders, getServiceOrdersCount }
+const getEvents = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .execute('[charts].eventsGet');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+}
+
+module.exports = { getMonthlySales, getCustomerGrowth, getUpcomingEvents, getEvents }

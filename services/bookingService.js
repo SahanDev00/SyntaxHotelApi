@@ -21,5 +21,30 @@ const getBookings = async (data) => {
     }
 }
 
+const GetPendingPaymentsCount = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .execute('[pay].PendingPaymentsCount');
 
-module.exports = { getBookings }
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+}
+
+const GetUpcomingReservations = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .execute('[charts].upcomingReservationsGet');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+}
+
+module.exports = { getBookings, GetPendingPaymentsCount, GetUpcomingReservations }

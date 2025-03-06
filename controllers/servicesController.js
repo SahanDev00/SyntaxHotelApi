@@ -61,4 +61,31 @@ const getServiceOrders = async (req, res) => {
     }
 };
 
-module.exports = { getService, getServiceOrders };
+// Controller to get service orders count
+const getServiceOrdersCount = async (req, res) => {
+    try {
+        // Extract query parameters
+        const data = {
+            APIKey: req.headers['apikey'], 
+            ServiceOrderID: req.query.ServiceOrderID ? parseInt(req.query.ServiceOrderID) : null,
+            BookingID: req.query.BookingID ? parseInt(req.query.BookingID) : null,
+            ServiceID: req.query.ServiceID ? parseInt(req.query.ServiceID) : null,
+            Status: req.query.Status || null,
+        };
+
+        // Call the service function
+        const serviceOrdersCount = await serviceService.getServiceOrdersCount(data);
+
+        res.status(200).json(serviceOrdersCount);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+module.exports = { getService, getServiceOrders, getServiceOrdersCount };

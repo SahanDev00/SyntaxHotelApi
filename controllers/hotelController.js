@@ -28,6 +28,26 @@ const getRooms = async (req, res) => {
     }
 };
 
+const GetAvailableRoomsCount = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+        };
+
+        const AvailableRoomsCount = await hotelService.GetAvailableRoomsCount(data);
+
+        res.status(200).json(AvailableRoomsCount);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
 const getRoomTypes = async (req, res) => {
     try {
         // Create the data object with request query parameters
@@ -88,6 +108,26 @@ const getTables = async (req, res) => {
     }
 };
 
+const GetAvailableTablesCount = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+        };
+
+        const AvailableTablesCount = await hotelService.GetAvailableTablesCount(data);
+
+        res.status(200).json(AvailableTablesCount);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
 const getTableTypes = async (req, res) => {
     try {
         // Create the data object from query parameters
@@ -143,4 +183,4 @@ const getInventoryItems = async (req, res) => {
     }
 };
 
-module.exports = { getRooms, getRoomTypes, getTables, getTableTypes, getInventoryItems };
+module.exports = { getRooms, getRoomTypes, getTables, getTableTypes, getInventoryItems, GetAvailableRoomsCount, GetAvailableTablesCount };

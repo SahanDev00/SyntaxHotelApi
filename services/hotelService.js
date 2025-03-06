@@ -17,6 +17,19 @@ const getRooms = async (data) => {
     }
 };
 
+const GetAvailableRoomsCount = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .execute('[room].AvailableRoomsCount');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
 const getRoomTypes = async (data) => {
     try {
         const pool = await poolPromise;
@@ -44,6 +57,19 @@ const getTables = async (data) => {
             .input('TableTypeID', sql.Int, data.TableTypeID)
             .input('Status', sql.VarChar(20), data.Status)
             .execute('[tab].tablesGet');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+const GetAvailableTablesCount = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .execute('[tab].AvailableTablesCount');
 
             return result.recordset;
     } catch (err) {
@@ -86,4 +112,4 @@ const getInventoryItems = async (data) => {
     }
 };
 
-module.exports = { getRooms, getTables, getInventoryItems, getRoomTypes, getTableTypes };
+module.exports = { getRooms, getTables, getInventoryItems, getRoomTypes, getTableTypes, GetAvailableRoomsCount, GetAvailableTablesCount };
