@@ -30,6 +30,31 @@ const getCustomers = async (req, res) => {
     }
 };
 
+const getCustomerByBookingID = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'], 
+            BookingID: req.query.BookingID ? parseInt(req.query.BookingID) : null,
+        };
+
+        const customers = await customerService.getCustomerByBookingID(data);
+
+        if (customers.length === 0) {
+            return res.status(404).json({ message: "No customers found" });
+        }
+
+        res.status(200).json(customers);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
 const getCustomerCategory = async (req, res) => {
     try {
         // Extract query parameters from request
@@ -85,4 +110,4 @@ const getCustomerCount = async (req, res) => {
     }
 };
 
-module.exports = { getCustomers, getCustomerCategory, getCustomerCount };
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID };

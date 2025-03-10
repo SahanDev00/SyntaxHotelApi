@@ -49,4 +49,18 @@ const getCustomerCount = async (data) => {
     }
 }
 
-module.exports = { getCustomers, getCustomerCategory, getCustomerCount }
+const getCustomerByBookingID = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('BookingID', sql.Int, data.BookingID)
+            .execute('[cus].CustomerByBookingIDGet');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+}
+
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID }

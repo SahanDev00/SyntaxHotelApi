@@ -39,8 +39,11 @@ const getUsers = async (req, res) => {
         const data = {
             APIKey: req.headers['apikey'],
             UserID: req.query.UserID ? parseInt(req.query.UserID) : null,
+            StaffID: req.query.StaffID ? parseInt(req.query.StaffID) : null,
             Username: req.query.Username || null,
-            Role: req.query.Role || null,
+            RoleID: req.query.RoleID ? parseInt(req.query.RoleID) : null,
+            email: req.query.email || null,
+            phone: req.query.phone || null,
             Status: req.query.Status || null,
         };
 

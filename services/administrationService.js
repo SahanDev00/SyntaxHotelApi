@@ -24,8 +24,11 @@ const getUsers = async (data) => {
         const result = await pool.request()
             .input('APIKey', sql.VarChar(255), data.APIKey)
             .input('UserID', sql.Int, data.UserID)
+            .input('StaffID', sql.Int, data.StaffID)
             .input('Username', sql.VarChar(50), data.Username)
-            .input('Role', sql.VarChar(20), data.Role)
+            .input('RoleID', sql.Int, data.RoleID)
+            .input('email', sql.VarChar(100), data.email)
+            .input('phone', sql.VarChar(15), data.phone)
             .input('Status', sql.VarChar(20), data.Status)
             .execute('[user].usersGet');
 
