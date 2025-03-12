@@ -110,4 +110,34 @@ const getCustomerCount = async (req, res) => {
     }
 };
 
-module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID };
+const AddEditCustomer = async (req, res) => {
+    try {
+        // Extract data from request body
+        const data = {
+            APIKey: req.headers['apikey'],
+            CustomerID: req.body.CustomerID || null, // If null, it's an add operation
+            customer_categoryID: req.body.customer_categoryID,
+            full_name: req.body.full_name,
+            phone: req.body.phone,
+            email: req.body.email,
+            address: req.body.address,
+            status: req.body.status || null, // Default to Active
+            banned_reason: req.body.banned_reason || null,
+        };
+
+        // Call the service function
+        const response = await customerService.AddEditCustomer(data);
+
+        res.status(200).json(response);
+    } catch (err) {
+        // Handle SQL or other errors
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: err.message || 'An unknown error occurred' });
+        }
+    }
+};
+
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID, AddEditCustomer };
