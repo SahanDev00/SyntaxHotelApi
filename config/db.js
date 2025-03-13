@@ -2,12 +2,17 @@ require('dotenv').config();
 const sql = require('mssql');
 
 const dbConfig = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    server: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    options: { encrypt: false, trustServerCertificate: true }
+    user: 'sa',
+    password: 'syntaxware0661',
+    server: 'localhost', // Remove \syntaxware for now
+    database: 'SyntaxHotel',
+    options: {
+        encrypt: false,
+        trustServerCertificate: true
+    },
+    port: 1433 // Explicitly define the port
 };
+
 
 // Connection pool
 const poolPromise = new sql.ConnectionPool(dbConfig)

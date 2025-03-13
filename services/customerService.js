@@ -84,4 +84,35 @@ const AddEditCustomer = async (data) => {
     }
 };
 
-module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID, AddEditCustomer }
+const AddEditCustomerCategory = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('CategoryID', sql.Int, data.CategoryID || null) // If null, it's an Add
+            .input('category_name', sql.VarChar(100), data.category_name)
+            .input('additionalFeeRate', sql.Decimal(10, 2), data.additionalFeeRate || 0)
+            .input('additionalFeeAmount', sql.Decimal(10, 2), data.additionalFeeAmount || 0)
+            .execute('[cus].customerCategoryAddEdit');
+
+        return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+const DeleteCustomerCategory = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('CategoryID', sql.Int, data.CategoryID)
+            .execute('[cus].deleteCustomerCategory');
+
+        return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID, AddEditCustomer, AddEditCustomerCategory, DeleteCustomerCategory }

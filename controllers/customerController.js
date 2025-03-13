@@ -140,4 +140,53 @@ const AddEditCustomer = async (req, res) => {
     }
 };
 
-module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID, AddEditCustomer };
+const AddEditCustomerCategory = async (req, res) => {
+    try {
+        // Extract data from request body
+        const data = {
+            APIKey: req.headers['apikey'],
+            CategoryID: req.body.CategoryID || null, // If null, it's an add operation
+            category_name: req.body.category_name,
+            additionalFeeRate: req.body.additionalFeeRate || 0,
+            additionalFeeAmount: req.body.additionalFeeAmount || 0,
+        };
+
+        // Call the service function
+        const response = await customerService.AddEditCustomerCategory(data);
+
+        res.status(200).json(response );
+    } catch (err) {
+        // Handle SQL or other errors
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: err.message || 'An unknown error occurred' });
+        }
+    }
+};
+
+const DeleteCustomerCategory = async (req, res) => {
+    try {
+        // Extract data from request body
+        const data = {
+            APIKey: req.headers['apikey'],
+            CategoryID: req.body.CategoryID
+        };
+
+        // Call the service function
+        const response = await customerService.DeleteCustomerCategory(data);
+
+        res.status(200).json( response );
+    } catch (err) {
+        // Handle SQL or other errors
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: err.message || 'An unknown error occurred' });
+        }
+    }
+};
+
+module.exports = { getCustomers, getCustomerCategory, getCustomerCount, getCustomerByBookingID, AddEditCustomer, AddEditCustomerCategory, DeleteCustomerCategory };
