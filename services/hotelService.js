@@ -90,8 +90,7 @@ const getTableTypes = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
@@ -107,9 +106,87 @@ const getInventoryItems = async (data) => {
 
             return result.recordset;
     } catch (err) {
-        console.error("Error in hotelService:", err);
-        throw err;
+        return { error: err.message || 'An error occurred' };
     }
 };
 
-module.exports = { getRooms, getTables, getInventoryItems, getRoomTypes, getTableTypes, GetAvailableRoomsCount, GetAvailableTablesCount };
+const AddRooms = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('roomID', sql.Int, data.roomID)
+            .input('room_number', sql.VarChar(10), data.room_number)
+            .input('roomTypeID', sql.Int, data.roomTypeID)
+            .input('status', sql.VarChar(20), data.status)
+            .execute('[room].roomsAddEdit');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+const AddRoomTypes = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('roomTypeID', sql.Int, data.roomTypeID)
+            .input('type_name', sql.VarChar(50), data.type_name)
+            .input('description', sql.Text, data.description)
+            .input('price_per_night', sql.Decimal(10,2), data.price_per_night)
+            .execute('[room].roomTypesAddEdit');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+const DeleteRooms = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('roomID', sql.Int, data.roomID)
+            .execute('[room].deleteRoom');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+const DeleteRoomType = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('roomTypeID', sql.Int, data.roomTypeID)
+            .execute('[room].deleteRoomType');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+const AddTableTypes = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('tableTypeID', sql.Int, data.roomTypeID)
+            .input('type_name', sql.VarChar(50), data.type_name)
+            .input('description', sql.Text, data.description)
+            .input('price_per_hour', sql.Decimal(10,2), data.price_per_hour)
+            .execute('[tab].tableTypesAddEdit');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
+module.exports = { getRooms, getTables, getInventoryItems, getRoomTypes, getTableTypes, GetAvailableRoomsCount, GetAvailableTablesCount, AddRooms, AddRoomTypes, DeleteRooms, DeleteRoomType, AddTableTypes };

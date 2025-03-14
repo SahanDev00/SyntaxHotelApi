@@ -183,4 +183,118 @@ const getInventoryItems = async (req, res) => {
     }
 };
 
-module.exports = { getRooms, getRoomTypes, getTables, getTableTypes, getInventoryItems, GetAvailableRoomsCount, GetAvailableTablesCount };
+const AddRooms = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+            roomID: req.body.roomID ? parseInt(req.body.roomID) : null,
+            room_number: req.body.room_number,
+            roomTypeID: req.body.roomTypeID ? parseInt(req.body.roomTypeID) : null,
+            status: req.body.status || 'Available',
+        };
+
+        const rooms = await hotelService.AddRooms(data);
+
+        res.status(200).json(rooms);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+const AddRoomTypes = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+            roomTypeID: req.body.roomTypeID ? parseInt(req.body.roomTypeID) : null,
+            type_name: req.body.type_name,
+            description: req.body.description  || '',
+            price_per_night: req.body.price_per_night,
+        };
+
+        const roomTypes = await hotelService.AddRoomTypes(data);
+
+        res.status(200).json(roomTypes);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+const DeleteRooms = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+            roomID: req.body.roomID,
+        };
+
+        const room = await hotelService.DeleteRooms(data);
+
+        res.status(200).json(room);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+const DeleteRoomType = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+            roomTypeID: req.body.roomTypeID,
+        };
+
+        const roomTypes = await hotelService.DeleteRoomType(data);
+
+        res.status(200).json(roomTypes);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+const AddTableTypes = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+            tableTypeID: req.body.tableTypeID ? parseInt(req.body.tableTypeID) : null,
+            type_name: req.body.type_name,
+            description: req.body.description  || '',
+            price_per_hour: req.body.price_per_hour,
+        };
+
+        const tableTypes = await hotelService.AddTableTypes(data);
+
+        res.status(200).json(tableTypes);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
+module.exports = { getRooms, getRoomTypes, getTables, getTableTypes, getInventoryItems, GetAvailableRoomsCount, GetAvailableTablesCount, AddRooms, AddRoomTypes, DeleteRooms, DeleteRoomType, AddTableTypes };
