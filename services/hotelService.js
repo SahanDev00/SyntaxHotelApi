@@ -172,12 +172,29 @@ const DeleteRoomType = async (data) => {
     }
 };
 
+const AddTables = async (data) => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('APIKey', sql.VarChar(255), data.APIKey)
+            .input('tableID', sql.Int, data.tableID)
+            .input('table_number', sql.VarChar(10), data.table_number)
+            .input('tableTypeID', sql.Int, data.tableTypeID)
+            .input('status', sql.VarChar(20), data.status)
+            .execute('[tab].tablesAddEdit');
+
+            return result.recordset;
+    } catch (err) {
+        return { error: err.message || 'An error occurred' };
+    }
+};
+
 const AddTableTypes = async (data) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('APIKey', sql.VarChar(255), data.APIKey)
-            .input('tableTypeID', sql.Int, data.roomTypeID)
+            .input('tableTypeID', sql.Int, data.tableTypeID)
             .input('type_name', sql.VarChar(50), data.type_name)
             .input('description', sql.Text, data.description)
             .input('price_per_hour', sql.Decimal(10,2), data.price_per_hour)
@@ -189,4 +206,4 @@ const AddTableTypes = async (data) => {
     }
 };
 
-module.exports = { getRooms, getTables, getInventoryItems, getRoomTypes, getTableTypes, GetAvailableRoomsCount, GetAvailableTablesCount, AddRooms, AddRoomTypes, DeleteRooms, DeleteRoomType, AddTableTypes };
+module.exports = { getRooms, getTables, getInventoryItems, getRoomTypes, getTableTypes, GetAvailableRoomsCount, GetAvailableTablesCount, AddRooms, AddRoomTypes, DeleteRooms, DeleteRoomType, AddTableTypes, AddTables };

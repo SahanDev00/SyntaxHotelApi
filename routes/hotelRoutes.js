@@ -14,5 +14,6 @@ router.post('/addroomtypes', hotelController.AddRoomTypes);
 router.delete('/deleteroom', hotelController.DeleteRooms);
 router.delete('/deleteroomtype', hotelController.DeleteRoomType);
 router.post('/addtabletypes', hotelController.AddTableTypes);
+router.post('/addtables', hotelController.AddTables);
 
 module.exports = router;

@@ -273,6 +273,31 @@ const DeleteRoomType = async (req, res) => {
     }
 };
 
+
+const AddTables = async (req, res) => {
+    try {
+        const data = {
+            APIKey: req.headers['apikey'],
+            tableID: req.body.tableID ? parseInt(req.body.tableID) : null,
+            table_number: req.body.table_number,
+            tableTypeID: req.body.tableTypeID ? parseInt(req.body.tableTypeID) : null,
+            status: req.body.status || 'Available',
+        };
+
+        const tables = await hotelService.AddTables(data);
+
+        res.status(200).json(tables);
+    } catch (err) {
+        // Check if the error is from SQL (or from the stored procedure)
+        if (err.originalError) {
+            const sqlErrorMessage = err.originalError.message || 'An unknown error occurred';
+            return res.status(500).json({ error: sqlErrorMessage });
+        } else {
+            return res.status(500).json({ error: 'An unknown error occurred' });
+        }
+    }
+};
+
 const AddTableTypes = async (req, res) => {
     try {
         const data = {
@@ -297,4 +322,4 @@ const AddTableTypes = async (req, res) => {
     }
 };
 
-module.exports = { getRooms, getRoomTypes, getTables, getTableTypes, getInventoryItems, GetAvailableRoomsCount, GetAvailableTablesCount, AddRooms, AddRoomTypes, DeleteRooms, DeleteRoomType, AddTableTypes };
+module.exports = { getRooms, getRoomTypes, getTables, getTableTypes, getInventoryItems, GetAvailableRoomsCount, GetAvailableTablesCount, AddRooms, AddRoomTypes, DeleteRooms, DeleteRoomType, AddTableTypes, AddTables };
