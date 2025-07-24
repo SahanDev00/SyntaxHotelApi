@@ -39,6 +39,38 @@ const getStaff = async (req, res) => {
   }
 };
 
+const AddStaff = async (req, res) => {
+  try {
+    // Extract data from request body
+    const data = {
+      APIKey: req.headers["apikey"],
+      staffID: req.body.staffID ? parseInt(req.body.staffID) : null,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      NIC: req.body.NIC,
+      mobileNumber: req.body.mobileNumber,
+      positionID: req.body.positionID,
+      salary: req.body.salary,
+      hiredDate: req.body.hiredDate,
+      status: req.body.status,
+    };
+
+    // Call the service function to add a booking
+    const result = await staffService.AddStaff(data);
+
+    res.status(200).json(result);
+  } catch (err) {
+    // Check if the error is from SQL (or from the stored procedure)
+    if (err.originalError) {
+      const sqlErrorMessage =
+        err.originalError.message || "An unknown error occurred";
+      return res.status(500).json({ error: sqlErrorMessage });
+    } else {
+      return res.status(500).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 // Controller to get staff positions
 const getStaffPositions = async (req, res) => {
   try {
@@ -94,4 +126,4 @@ const AddStaffPositions = async (req, res) => {
   }
 };
 
-module.exports = { getStaff, getStaffPositions, AddStaffPositions };
+module.exports = { getStaff, getStaffPositions, AddStaffPositions, AddStaff };

@@ -47,9 +47,16 @@ const AddStaff = async (data) => {
     const result = await pool
       .request()
       .input("APIKey", sql.VarChar(255), data.APIKey)
-      .input("PositionID", sql.Int, data.PositionID)
-      .input("PositionName", sql.VarChar(100), data.PositionName)
-      .execute("[st].staffPositionAddEdit");
+      .input("staffID", sql.Int, data.staffID)
+      .input("firstName", sql.VarChar(100), data.firstName)
+      .input("lastName", sql.VarChar(100), data.lastName)
+      .input("NIC", sql.VarChar(50), data.NIC)
+      .input("mobileNumber", sql.Int, data.mobileNumber)
+      .input("positionID", sql.Int, data.positionID)
+      .input("salary", sql.Float, data.salary)
+      .input("hiredDate", sql.DateTime, data.hiredDate)
+      .input("status", sql.VarChar(20), data.status)
+      .execute("[st].staffAddEdit");
 
     return result.recordset;
   } catch (err) {
@@ -73,4 +80,4 @@ const AddStaffPositions = async (data) => {
   }
 };
 
-module.exports = { getStaff, getStaffPositions, AddStaffPositions };
+module.exports = { getStaff, getStaffPositions, AddStaffPositions, AddStaff };
