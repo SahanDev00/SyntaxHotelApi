@@ -26,6 +26,7 @@ const getHotelNotes = async (req, res) => {
   try {
     const data = {
       APIKey: req.headers["apikey"],
+      NoteID: req.query.NoteID ? parseInt(req.query.NoteID) : null,
       UserID: req.query.UserID ? parseInt(req.query.UserID) : null,
     };
 
@@ -76,6 +77,7 @@ const getCustomerNotes = async (req, res) => {
     const data = {
       APIKey: req.headers["apikey"],
       CustomerID: req.query.CustomerID ? parseInt(req.query.CustomerID) : null,
+      NoteID: req.query.NoteID ? parseInt(req.query.NoteID) : null,
       UserID: req.query.UserID ? parseInt(req.query.UserID) : null,
     };
 
@@ -102,6 +104,7 @@ const getBookingNotes = async (req, res) => {
   try {
     const data = {
       APIKey: req.headers["apikey"],
+      NoteID: req.query.NoteID ? parseInt(req.query.NoteID) : null,
       UserID: req.query.UserID ? parseInt(req.query.UserID) : null,
     };
 
@@ -147,6 +150,72 @@ const AddBookingNotes = async (req, res) => {
   }
 };
 
+const deleteHotelNotes = async (req, res) => {
+  try {
+    const data = {
+      APIKey: req.headers["apikey"],
+      NoteID: req.body.NoteID,
+    };
+
+    const note = await noteService.deleteHotelNotes(data);
+
+    res.status(200).json(note);
+  } catch (err) {
+    // Check if the error is from SQL (or from the stored procedure)
+    if (err.originalError) {
+      const sqlErrorMessage =
+        err.originalError.message || "An unknown error occurred";
+      return res.status(500).json({ error: sqlErrorMessage });
+    } else {
+      return res.status(500).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+const deleteBookingNotes = async (req, res) => {
+  try {
+    const data = {
+      APIKey: req.headers["apikey"],
+      NoteID: req.body.NoteID,
+    };
+
+    const note = await noteService.deleteBookingNotes(data);
+
+    res.status(200).json(note);
+  } catch (err) {
+    // Check if the error is from SQL (or from the stored procedure)
+    if (err.originalError) {
+      const sqlErrorMessage =
+        err.originalError.message || "An unknown error occurred";
+      return res.status(500).json({ error: sqlErrorMessage });
+    } else {
+      return res.status(500).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+const deleteCustomerNotes = async (req, res) => {
+  try {
+    const data = {
+      APIKey: req.headers["apikey"],
+      NoteID: req.body.NoteID,
+    };
+
+    const note = await noteService.deleteCustomerNotes(data);
+
+    res.status(200).json(note);
+  } catch (err) {
+    // Check if the error is from SQL (or from the stored procedure)
+    if (err.originalError) {
+      const sqlErrorMessage =
+        err.originalError.message || "An unknown error occurred";
+      return res.status(500).json({ error: sqlErrorMessage });
+    } else {
+      return res.status(500).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 module.exports = {
   getHotelNotes,
   getCustomerNotes,
@@ -154,4 +223,7 @@ module.exports = {
   AddHotelNotes,
   AddCustomerNotes,
   AddBookingNotes,
+  deleteBookingNotes,
+  deleteHotelNotes,
+  deleteCustomerNotes,
 };

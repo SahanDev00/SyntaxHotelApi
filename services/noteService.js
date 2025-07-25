@@ -23,6 +23,7 @@ const getHotelNotes = async (data) => {
     const result = await pool
       .request()
       .input("APIKey", sql.VarChar(255), data.APIKey)
+      .input("NoteID", sql.Int, data.NoteID)
       .input("UserID", sql.Int, data.UserID)
       .execute("[note].hotelNotesGet");
 
@@ -57,6 +58,7 @@ const getCustomerNotes = async (data) => {
       .request()
       .input("APIKey", sql.VarChar(255), data.APIKey)
       .input("CustomerID", sql.Int, data.CustomerID)
+      .input("NoteID", sql.Int, data.NoteID)
       .input("UserID", sql.Int, data.UserID)
       .execute("[note].customerNotesGet");
 
@@ -72,6 +74,7 @@ const getBookingNotes = async (data) => {
     const result = await pool
       .request()
       .input("APIKey", sql.VarChar(255), data.APIKey)
+      .input("NoteID", sql.Int, data.NoteID)
       .input("UserID", sql.Int, data.UserID)
       .execute("[note].bookingNotesGet");
 
@@ -98,6 +101,51 @@ const AddBookingNotes = async (data) => {
   }
 };
 
+const deleteHotelNotes = async (data) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("APIKey", sql.VarChar(255), data.APIKey)
+      .input("NoteID", sql.Int, data.NoteID)
+      .execute("[note].HotelNotes_Delete");
+
+    return result.recordset;
+  } catch (err) {
+    return { error: err.message || "An error occurred" };
+  }
+};
+
+const deleteBookingNotes = async (data) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("APIKey", sql.VarChar(255), data.APIKey)
+      .input("NoteID", sql.Int, data.NoteID)
+      .execute("[note].BookingNotes_Delete");
+
+    return result.recordset;
+  } catch (err) {
+    return { error: err.message || "An error occurred" };
+  }
+};
+
+const deleteCustomerNotes = async (data) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("APIKey", sql.VarChar(255), data.APIKey)
+      .input("NoteID", sql.Int, data.NoteID)
+      .execute("[note].CustomerNotes_Delete");
+
+    return result.recordset;
+  } catch (err) {
+    return { error: err.message || "An error occurred" };
+  }
+};
+
 module.exports = {
   getHotelNotes,
   getCustomerNotes,
@@ -105,4 +153,7 @@ module.exports = {
   AddHotelNotes,
   AddCustomerNotes,
   AddBookingNotes,
+  deleteHotelNotes,
+  deleteBookingNotes,
+  deleteCustomerNotes,
 };

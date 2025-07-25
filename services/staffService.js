@@ -80,4 +80,25 @@ const AddStaffPositions = async (data) => {
   }
 };
 
-module.exports = { getStaff, getStaffPositions, AddStaffPositions, AddStaff };
+const deleteStaffPositions = async (data) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("APIKey", sql.VarChar(255), data.APIKey)
+      .input("positionID", sql.Int, data.positionID)
+      .execute("[st].deleteStaffPosition");
+
+    return result.recordset;
+  } catch (err) {
+    return { error: err.message || "An error occurred" };
+  }
+};
+
+module.exports = {
+  getStaff,
+  getStaffPositions,
+  AddStaffPositions,
+  AddStaff,
+  deleteStaffPositions,
+};

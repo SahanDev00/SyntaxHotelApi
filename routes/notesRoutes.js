@@ -8,5 +8,8 @@ router.post("/bookingnotes/addedit", noteController.AddBookingNotes);
 router.get("/bookingnotes", noteController.getBookingNotes);
 router.post("/customernotes/addedit", noteController.AddCustomerNotes);
 router.get("/customernotes", noteController.getCustomerNotes);
+router.delete("/hotelnotes/delete", noteController.deleteHotelNotes);
+router.delete("/bookingnotes/delete", noteController.deleteBookingNotes);
+router.delete("/customernotes/delete", noteController.deleteCustomerNotes);
 
 module.exports = router;

@@ -126,4 +126,32 @@ const AddStaffPositions = async (req, res) => {
   }
 };
 
-module.exports = { getStaff, getStaffPositions, AddStaffPositions, AddStaff };
+const deleteStaffPosition = async (req, res) => {
+  try {
+    const data = {
+      APIKey: req.headers["apikey"],
+      positionID: req.body.positionID,
+    };
+
+    const position = await staffService.deleteStaffPositions(data);
+
+    res.status(200).json(position);
+  } catch (err) {
+    // Check if the error is from SQL (or from the stored procedure)
+    if (err.originalError) {
+      const sqlErrorMessage =
+        err.originalError.message || "An unknown error occurred";
+      return res.status(500).json({ error: sqlErrorMessage });
+    } else {
+      return res.status(500).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+module.exports = {
+  getStaff,
+  getStaffPositions,
+  AddStaffPositions,
+  AddStaff,
+  deleteStaffPosition,
+};
